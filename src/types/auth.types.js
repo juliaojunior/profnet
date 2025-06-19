@@ -1,4 +1,6 @@
 // src/types/auth.types.ts
+import type { User } from 'firebase/auth'
+
 export interface UserProfile {
   uid: string
   email: string
