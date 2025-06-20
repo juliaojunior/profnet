@@ -79,6 +79,44 @@ export const useAuth = () => {
     })
   })
 
+  // NOVO MÉTODO: Atualiza perfil no Firestore e sincroniza estado global
+const updateUserProfile = async (profileData: {
+  bio?: string
+  department?: string
+  subjects?: string[]
+}) => {
+  if (!user.value || !userProfile.value) {
+    throw new Error('Usuário não autenticado')
+  }
+
+  try {
+    const profileRef = doc(db, 'profiles', user.value.uid)
+    
+    // Limpa dados para evitar undefined
+    const cleanData = {
+      bio: profileData.bio || '',
+      department: profileData.department || '',
+      subjects: profileData.subjects || []
+    }
+    
+    // Atualiza no Firestore
+    await updateDoc(profileRef, cleanData)
+    
+    // CRÍTICO: Sincroniza o estado global imediatamente
+    if (userProfile.value) {
+      userProfile.value.bio = cleanData.bio
+      userProfile.value.department = cleanData.department
+      userProfile.value.subjects = cleanData.subjects
+    }
+    
+    return true
+  } catch (error) {
+    console.error('Erro ao atualizar perfil:', error)
+    throw error
+  }
+}
+
+
   return {
     user: readonly(user),
     userProfile: readonly(userProfile),
@@ -86,6 +124,7 @@ export const useAuth = () => {
     isLoading: readonly(isLoading),
     error: readonly(error),
     loginWithGoogle,
-    logout
+    logout,
+    updateUserProfile
   }
 }
