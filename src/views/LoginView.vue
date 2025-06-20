@@ -52,7 +52,7 @@ const router = useRouter()
 const handleGoogleLogin = async () => {
   try {
     await loginWithGoogle()
-    router.push('/profile')
+    router.push('/social') // Redireciona para o feed social
   } catch (err) {
     console.error('Erro no login:', err)
   }
