@@ -26,12 +26,12 @@ export const usePosts = () => {
     try {
       await socialService.createPost({
         authorId: userProfile.value.uid,
-        authorName: userProfile.value.displayName,
-        authorPhoto: userProfile.value.photoURL,
-        authorDepartment: userProfile.value.department,
+        authorName: userProfile.value.displayName ?? 'Professor',
+        authorPhoto: userProfile.value.photoURL ?? null,
+        authorDepartment: userProfile.value.department ?? 'Educador',
         content: content.trim(),
         postType,
-        hashtags
+        hashtags: hashtags.filter(tag => tag && tag.trim().length > 0)
       })
       
       return true
