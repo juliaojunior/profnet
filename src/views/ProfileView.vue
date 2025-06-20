@@ -187,7 +187,7 @@ import type { UserProfile } from '../types/auth.types'
 
 // Composables e roteamento
 const router = useRouter()
-const { userProfile, isLoading, logout } = useAuth()
+const { userProfile, isLoading, logout, updateUserProfile } = useAuth()
 
 // Estados reativos para controle da interface
 const isEditing = ref(false)
@@ -249,6 +249,13 @@ const saveProfile = async () => {
       .split(',')
       .map(s => s.trim())
       .filter(s => s.length > 0)
+
+    // CHAMA O NOVO MÉTODO DO COMPOSABLE
+    await updateUserProfile({
+      bio: editableProfile.value.bio?.trim() || '',
+      department: editableProfile.value.department?.trim() || '',
+      subjects: subjects
+    })
 
     // Referência do documento no Firestore
     const profileRef = doc(db, 'profiles', userProfile.value.uid)
